@@ -1,5 +1,6 @@
 ;;; pcre.lisp -- Reader macros for PCRE literals.
 
+#+cl-ppcre
 (defun pcre/segment-reader (stream delim n)
   "Read a unit of a PCRE match, or replacement.
 When N = 1, finds a /match/ pattern.
@@ -8,7 +9,9 @@ When N = 2, finds a /match/replacement/ pattern."
     (let (chars)
       (do ((curr (read-char stream) (read-char stream)))
           ((char= delim curr))
-        (push curr chars))
+        (push curr chars)
+        (when (char= #\\ curr)
+          (push (read-char stream) chars)))
       (cons (coerce (nreverse chars) 'string)
             (pcre/segment-reader stream delim (1- n))))))
 
