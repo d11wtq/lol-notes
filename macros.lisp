@@ -1,11 +1,5 @@
 ;;; macros.lisp --- Macros for special forms.
 
-(defmacro nlet (n letargs &rest body)
-  "Expands to a named let, bound to a function N"
-  `(labels ((,n ,(mapcar #'car letargs)
-                ,@body))
-     (,n ,@(mapcar #'cadr letargs))))
-
 (defmacro defmacro/g! (name args &rest body)
   "Special DEFMACRO that replaces G! symbols with GENSYMs"
   (let ((syms (remove-duplicates
